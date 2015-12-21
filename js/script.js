@@ -15,6 +15,8 @@
     }, searchAnimDuration);
   };
 
+  console.log("hiiiiiiiiiiiiiiiiiiiiiiii");
+
   $('#nav-search-btn').on('click', function(){
     if (isSearchAnim) return;
 
