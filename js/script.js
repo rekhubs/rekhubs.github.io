@@ -1,37 +1,22 @@
 (function($){
-  // Search
-  var $searchWrap = $('#search-form-wrap'),
-    isSearchAnim = false,
-    searchAnimDuration = 200;
-
-  var startSearchAnim = function(){
-    isSearchAnim = true;
-  };
-
-  var stopSearchAnim = function(callback){
-    setTimeout(function(){
-      isSearchAnim = false;
-      callback && callback();
-    }, searchAnimDuration);
-  };
-
-  console.log("hiiiiiiiiiiiiiiiiiiiiiiii");
-
-  $('#nav-search-btn').on('click', function(){
-    if (isSearchAnim) return;
-
-    startSearchAnim();
-    $searchWrap.addClass('on');
-    stopSearchAnim(function(){
-      $('.search-form-input').focus();
-    });
+  // Nav bar toggle
+  $('#main-nav-toggle').on('click', function(){
+    $('.nav-container-inner').slideToggle();
   });
 
-  $('.search-form-input').on('blur', function(){
-    startSearchAnim();
-    $searchWrap.removeClass('on');
-    stopSearchAnim();
-  });
+  // display latest last.fm track
+  $.ajax({
+    url: "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=ralph4&api_key=ef852f8c547fb57029fb630021bc00ee&format=json&limit=5",
+    dataType: 'jsonp'
+  }).done( function(data){
+    console.log("data is: " + data);
+    console.log(data.recenttracks.track[0].artist['#text']);
+    var lastTrack = data.recenttracks.track[0];
+    var artist = lastTrack.artist['#text'];
+    var trackName = lastTrack["name"];
+    $('#header-title').append('<h1 style="color:white">' + artist + ' - ' + trackName +'</p>');
+  })
+
 
   // Share
   $('body').on('click', function(){
@@ -108,32 +93,8 @@
     $('.fancybox').fancybox();
   }
 
-  // Mobile nav
-  var $container = $('#container'),
-    isMobileNavAnim = false,
-    mobileNavAnimDuration = 200;
-
-  var startMobileNavAnim = function(){
-    isMobileNavAnim = true;
-  };
-
-  var stopMobileNavAnim = function(){
-    setTimeout(function(){
-      isMobileNavAnim = false;
-    }, mobileNavAnimDuration);
-  }
-
-  $('#main-nav-toggle').on('click', function(){
-    if (isMobileNavAnim) return;
-
-    startMobileNavAnim();
-    $container.toggleClass('mobile-nav-on');
-    stopMobileNavAnim();
-  });
-
-  $('#wrap').on('click', function(){
-    if (isMobileNavAnim || !$container.hasClass('mobile-nav-on')) return;
-
-    $container.removeClass('mobile-nav-on');
-  });
+  //Back to top
+  $("#back-to-top").on('click', function(){  
+    $('body,html').animate({scrollTop:0}, 600);
+  }); 
 })(jQuery);
